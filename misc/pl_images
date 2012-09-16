@@ -1,0 +1,112 @@
+#!/usr/bin/python
+
+import json
+import urllib
+import urllib2
+import getopt
+import sys
+import os
+import glob
+import commands
+
+tmp_dir = "/tmp/gtkollection_web"
+
+def search_image(searchfor, start_idx=0):
+    query = urllib.urlencode({'q': searchfor})
+    url = 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&start=%d&%s' % (start_idx, query)
+
+    try:
+        search_response = urllib2.urlopen(url)
+    except ValueError:
+        return 0, []
+
+    search_results = search_response.read()
+
+    try:
+        results = json.loads(search_results)
+    except ValueError:
+        return 0, []
+
+    try:
+        data = results['responseData']
+    except KeyError:
+        return 0, []
+
+    try:
+        total = data['cursor']['estimatedResultCount']
+    except KeyError:
+        return 0, []
+
+    try:
+        hits = data['results']
+    except KeyError:
+        return 0, []
+
+    l = []
+
+    for h in hits:
+        l.append(h['url'])
+
+    return total, l
+
+
+
+def test_network_connection():
+    t = 3
+    ip = '8.8.8.8'
+    status = int(commands.getoutput('ping -q -c %d %s 1>/dev/null 2>/dev/null; echo $?' % (t, ip)))
+
+    if status == 0:
+        return 1
+
+    return 0
+
+
+
+def main():
+    optlist, args = getopt.getopt(sys.argv[1:], 's:q:')
+
+    for o, a in optlist:
+        if o == "-s":
+            start = int(a)
+        elif o == "-q":
+            query_str = a
+
+    if not test_network_connection():
+        print '-1,0'
+        return
+
+    if os.access(tmp_dir, os.F_OK):
+        os.system('rm -rf %s' % tmp_dir)
+
+    os.system('mkdir %s' % tmp_dir)
+    total, files = search_image(query_str, start)
+    i = 0
+    l = []
+
+    for f in files:
+        intermediate_name = '%s/intermediate_%d' % (tmp_dir, i)
+        cmd = '(cd %s && wget -t 2 -T 5 -q \"%s\" -O %s)' % (tmp_dir, f, intermediate_name)
+        os.system(cmd)
+        l.append(intermediate_name)
+        i += 1
+
+    i = 0
+
+    for f in l:
+        cmd = 'convert -resize 150x150 %s %s/image_%d.jpg 1>/dev/null 2>/dev/null; echo $?' % (f, tmp_dir, i)
+        status = int(commands.getoutput(cmd))
+        os.system('rm -f %s' % f)
+
+        if status == 0:
+            i += 1
+
+    print '%d,%s' % (i, total)
+
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+
+
