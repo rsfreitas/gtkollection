@@ -18,6 +18,9 @@
 #define FIELD_ACTIVE                    0
 #define FIELD_HIDDEN                    !(FIELD_ACTIVE)
 
+#define CONFIG_SORT_ASC                 0
+#define CONFIG_SORT_DESC                1
+
 enum line_status {
     LINE_LOADED = 0,
     LINE_ADDED,

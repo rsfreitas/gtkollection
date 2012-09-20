@@ -1,6 +1,18 @@
 
 CC = gcc
-TARGET = ../bin/gtkollection
+INSTALL = install
+TARGET = gtkollection
+
+prefix = $(DESTDIR)/opt/gtkollection
+DEST_BIN_DIR = $(prefix)/bin
+DEST_PLUGIN_DIR = $(prefix)/plugins
+
+APP_NAME = gtkollection
+APP_LINK = /usr/bin/gtkollection
+LICENSE = ../misc/gpl-2.0.txt
+
+PLUGINS =	\
+	../misc/pl_images
 
 GTK_INCLUDES = $(shell pkg-config --cflags-only-I gtk+-2.0)
 GTK_LIBS = $(shell pkg-config --libs-only-l gtk+-2.0)
@@ -12,8 +24,8 @@ LIBDIR =
 LIBS = -lsqlite3
 
 HEADERS =	\
-	../include/gtkollection.h	\
-	../include/gtkollection_def.h	\
+	../include/gtkollection.h		\
+	../include/gtkollection_def.h		\
 	../include/gtkollection_struct.h	\
 	../include/gtkollection_prt.h
 
@@ -42,23 +54,12 @@ gtk_gui.o: gtk_gui.c $(HEADERS)
 clean:
 	rm -rf $(OBJS) $(TARGET) *~ ../include/*~
 
-DESTDIR = /opt/gtkollection
-DEST_BIN_DIR = $(DESTDIR)/bin
-DEST_PLUGIN_DIR = $(DESTDIR)/plugins
-
-APP_NAME = gtkollection
-APP_LINK = /usr/bin/gtkollection
-LICENSE = ../misc/gpl-2.0.txt
-
-PLUGINS =	\
-	../misc/pl_images
-
-install:
+install: $(TARGET)
 	$(shell if ! test -d $(DEST_BIN_DIR); then mkdir -p $(DEST_BIN_DIR); fi)
 	$(shell if ! test -d $(DEST_PLUGIN_DIR); then mkdir -p $(DEST_PLUGIN_DIR); fi)
-	cp -f $(TARGET) $(DEST_BIN_DIR)
-	cp -f $(PLUGINS) $(DEST_PLUGIN_DIR)
-	cp -f $(LICENSE) $(DESTDIR)
+	$(INSTALL) -m 755 $(TARGET) $(DEST_BIN_DIR)
+	$(INSTALL) -m 755 $(PLUGINS) $(DEST_PLUGIN_DIR)
+	$(INSTALL) -m 644 $(LICENSE) $(prefix)
 	rm -f $(APP_LINK)
 	ln -s $(DEST_BIN_DIR)/$(APP_NAME) $(APP_LINK)
 

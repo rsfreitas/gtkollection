@@ -8,6 +8,7 @@
 #include <libintl.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "gtkollection.h"
 #include "../misc/cover_image.xpm"

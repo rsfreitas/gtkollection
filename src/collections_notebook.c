@@ -507,7 +507,8 @@ static void update_treeview_data(struct dlg_data *dlg_data)
     GtkTreeIter iter;
     struct dlg_line *line;
 
-    s_model.column_idx = gtk_combo_box_get_active(GTK_COMBO_BOX(dlg_data->priv.sort_combo));
+    s_model.column_idx =
+        gtk_combo_box_get_active(GTK_COMBO_BOX(dlg_data->priv.sort_combo));
 
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg_data->priv.rd_asc)))
         s_model.s_type = GTK_SORT_ASCENDING;
@@ -577,12 +578,18 @@ static GtkWidget *dlg_create_sorting_widgets(struct dlg_data *dlg_data)
     }
 
     gtk_widget_set_sensitive(combo, FALSE);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), dlg_data->info.idx_field);
     rd_asc = gtk_radio_button_new_with_label(NULL, gettext("Ascending"));
-    g_signal_connect(rd_asc, "toggled", G_CALLBACK(s_enable_sorting), dlg_data);
     rd_desc = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(rd_asc),
                                                           gettext("Descending"));
 
+    /* Call this before installing the signal */
+    if (dlg_data->info.order == CONFIG_SORT_ASC)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(rd_asc), TRUE);
+    else
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(rd_desc), TRUE);
+
+    g_signal_connect(rd_asc, "toggled", G_CALLBACK(s_enable_sorting), dlg_data);
     g_signal_connect(rd_desc, "toggled", G_CALLBACK(s_enable_sorting), dlg_data);
 
     gtk_widget_set_sensitive(rd_asc, FALSE);
@@ -598,6 +605,7 @@ static GtkWidget *dlg_create_sorting_widgets(struct dlg_data *dlg_data)
     dlg_data->priv.sort_combo = combo;
     dlg_data->priv.rd_asc = rd_asc;
     dlg_data->priv.rd_desc = rd_desc;
+    dlg_data->priv.check_bt_sort = check_bt;
 
     return frame;
 }
@@ -680,6 +688,7 @@ struct dlg_data *collection_widget(struct db_collection *c, GtkWidget *notebook)
 
     dlg_data->notebook = notebook;
     dlg_data->c = c;
+    load_collection_info_from_config(c->name, &dlg_data->info);
 
     vbox = gtk_vbox_new(FALSE, 3);
     hbox = gtk_hbox_new(FALSE, 3);
@@ -705,6 +714,14 @@ struct dlg_data *collection_widget(struct db_collection *c, GtkWidget *notebook)
     /* create_buttons */
     vbox_bt = dlg_create_buttons_widgets(dlg_data);
     gtk_box_pack_start(GTK_BOX(vbox), vbox_bt, FALSE, FALSE, 0);
+
+    /*
+     * Call this here because the collection information has already been loaded
+     * from database and we can sort them.
+     */
+    if (dlg_data->info.enable)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dlg_data->priv.check_bt_sort),
+                                     TRUE);
 
     dlg_data->page = vbox;
     ui_update_data_status(dlg_data, DATA_SAVED);

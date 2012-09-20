@@ -7,6 +7,8 @@ int access_app_config_dir(void);
 void create_app_config_dir(void);
 void load_config_file(struct app_settings *settings);
 void save_config_file(struct app_settings settings);
+void load_collection_info_from_config(const char *name,
+                                      struct collection_sort_info *info);
 
 /* common.c */
 struct db_collection *create_db_collection(const char *screen_name, const char *name,
@@ -43,7 +45,7 @@ char *load_license_file(void);
 
 /* gtk_gui.c */
 void init_ui(int *argcp, char ***argvp, struct app_settings *settings);
-void exit_ui(void);
+void exit_ui(struct app_settings *settings);
 void run_ui(struct app_settings *settings);
 
 /* database.c */

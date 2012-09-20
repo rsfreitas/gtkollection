@@ -59,8 +59,32 @@ static const char *__ui_string = "\
     </ui> \
 ";
 
+static void get_collection_sort_info(struct dlg_data *dlg_data)
+{
+    if (GTK_TOGGLE_BUTTON(dlg_data->priv.check_bt_sort)->active)
+        dlg_data->info.enable = 1;
+    else
+        dlg_data->info.enable = 0;
+
+    dlg_data->info.idx_field =
+        gtk_combo_box_get_active(GTK_COMBO_BOX(dlg_data->priv.sort_combo));
+
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg_data->priv.rd_asc)))
+        dlg_data->info.order = CONFIG_SORT_ASC;
+    else
+        dlg_data->info.order = CONFIG_SORT_DESC;
+}
+
 static void get_window_settings(void)
 {
+    GList *l;
+    struct dlg_data *dlg_data;
+
+    for (l = g_list_first(__dlg_data); l; l = l->next) {
+        dlg_data = (struct dlg_data *)l->data;
+        get_collection_sort_info(dlg_data);
+    }
+
     if (__settings->maximized == FALSE)
         gtk_window_get_size(GTK_WINDOW(__main_window), &__settings->wnd_width,
                             &__settings->wnd_height);
@@ -454,8 +478,34 @@ void run_ui(struct app_settings *settings)
     gtk_main();
 }
 
-void exit_ui(void)
+static void add_collection_sort_info(struct app_settings *settings,
+    struct collection_sort_info info, const char *name)
 {
+    struct collection_sort_info *i;
+
+    i = malloc(sizeof(struct collection_sort_info));
+
+    if (!i)
+        return;
+
+    i->name = strdup(name);
+    i->enable = info.enable;
+    i->idx_field = info.idx_field;
+    i->order = info.order;
+
+    settings->sort_info = g_list_append(settings->sort_info, i);
+}
+
+void exit_ui(struct app_settings *settings)
+{
+    GList *l;
+    struct dlg_data *dlg_data;
+
+    for (l = g_list_first(__dlg_data); l; l = l->next) {
+        dlg_data = (struct dlg_data *)l->data;
+        add_collection_sort_info(settings, dlg_data->info, dlg_data->c->name);
+    }
+
     ui_remove_mainwindow(__main_window);
     g_list_free(__dlg_data);
     g_list_foreach(__db_collection, (GFunc)destroy_db_collection, NULL);

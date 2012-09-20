@@ -8,6 +8,7 @@
 #include <libintl.h>
 #include <sys/stat.h>
 #include <libgen.h>
+#include <unistd.h>
 
 #include <sqlite3.h>
 

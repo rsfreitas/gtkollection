@@ -2,12 +2,20 @@
 #ifndef _GTKOLLECTION_STRUCT_H
 #define _GTKOLLECTION_STRUCT_H			1
 
+struct collection_sort_info {
+    int         enable;
+    int         idx_field;
+    int         order;
+    char        *name;
+};
+
 struct app_settings {
     gboolean    maximized;
     int         wnd_width;
     int         wnd_height;
     int         pos_x;
     int         pos_y;
+    GList       *sort_info;
 };
 
 struct db_field {
@@ -45,6 +53,7 @@ struct private_dlg_data {
     GtkWidget   **textbox;
     GtkWidget   *bt_img;
     GtkWidget   *image;
+    GtkWidget   *check_bt_sort;
     GtkWidget   *sort_combo;
     GtkWidget   *rd_asc;
     GtkWidget   *rd_desc;
@@ -69,6 +78,9 @@ struct dlg_data {
     GtkWidget               *page;
     GtkWidget               *bt_save;
     struct db_collection    *c;
+
+    /* collection sort configuration */
+    struct collection_sort_info info;
 };
 
 #endif

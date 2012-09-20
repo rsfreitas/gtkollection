@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
     init_ui(&argc, &argv, &settings);
     run_ui(&settings);
-    exit_ui();
+    exit_ui(&settings);
     db_uninit();
 
     save_config_file(settings);
