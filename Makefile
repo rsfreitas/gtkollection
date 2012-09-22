@@ -24,10 +24,7 @@ LIBDIR =
 LIBS = -lsqlite3
 
 HEADERS =	\
-	gtkollection.h		\
-	gtkollection_def.h		\
-	gtkollection_struct.h	\
-	gtkollection_prt.h
+	gtkollection.h
 
 OBJS =	\
 	collections_dialog.o	\
