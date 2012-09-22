@@ -9,10 +9,10 @@ DEST_PLUGIN_DIR = $(prefix)/plugins
 
 APP_NAME = gtkollection
 APP_LINK = /usr/bin/gtkollection
-LICENSE = ../misc/gpl-2.0.txt
+LICENSE = misc/gpl-2.0.txt
 
 PLUGINS =	\
-	../misc/pl_images
+	misc/pl_images
 
 GTK_INCLUDES = $(shell pkg-config --cflags-only-I gtk+-2.0)
 GTK_LIBS = $(shell pkg-config --libs-only-l gtk+-2.0)
@@ -57,12 +57,10 @@ install: $(TARGET)
 	$(INSTALL) -m 755 $(TARGET) $(DEST_BIN_DIR)
 	$(INSTALL) -m 755 $(PLUGINS) $(DEST_PLUGIN_DIR)
 	$(INSTALL) -m 644 $(LICENSE) $(prefix)
-	rm -f $(APP_LINK)
-	ln -s $(DEST_BIN_DIR)/$(APP_NAME) $(APP_LINK)
 
 purge: clean $(TARGET)
 
-MANPAGE = ../doc/gtkollection.1
+MANPAGE = doc/gtkollection.1
 MAN_DIR = /usr/share/man/man1
 
 doc:
