@@ -1,0 +1,13 @@
+Source: gtkollection
+Section: utils
+Priority: extra
+Maintainer: Rodrigo Freitas <rsfreitas.c@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.3
+Homepage: http://rsfreitas.gihub.com/gtkollection
+
+Package: gtkollection
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: An application to manage collections.
+ gtkollection is an application that lets you manage all kind of collection.

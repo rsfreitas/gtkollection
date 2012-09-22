@@ -1,0 +1,13 @@
+#!/bin/bash
+
+bin_name=/opt/gtkollection/bin/gtkollection
+link_name=/usr/bin/gtkollection
+
+if [ -e $link_name ]; then
+    rm -f $link_name
+fi
+
+ln -s $bin_name $link_name
+
+exit 0
+
