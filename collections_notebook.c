@@ -8,7 +8,7 @@
 #include <libintl.h>
 
 #include "gtkollection.h"
-#include "../misc/cover_image.xpm"
+#include "cover_image.xpm"
 
 #define TITLE_DEFAULT               0
 #define TITLE_UNSAVED               1

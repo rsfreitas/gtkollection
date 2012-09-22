@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 #include "gtkollection.h"
-#include "../misc/cover_image.xpm"
+#include "cover_image.xpm"
 
 struct plugin_st {
     int                 n_images;

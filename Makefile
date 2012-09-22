@@ -17,17 +17,17 @@ PLUGINS =	\
 GTK_INCLUDES = $(shell pkg-config --cflags-only-I gtk+-2.0)
 GTK_LIBS = $(shell pkg-config --libs-only-l gtk+-2.0)
 
-INCLUDEDIR = -I../include
+INCLUDEDIR = -I.
 CFLAGS = -Wall -Wextra -O0 -ggdb $(INCLUDEDIR) $(GTK_INCLUDES)
 
 LIBDIR =
 LIBS = -lsqlite3
 
 HEADERS =	\
-	../include/gtkollection.h		\
-	../include/gtkollection_def.h		\
-	../include/gtkollection_struct.h	\
-	../include/gtkollection_prt.h
+	gtkollection.h		\
+	gtkollection_def.h		\
+	gtkollection_struct.h	\
+	gtkollection_prt.h
 
 OBJS =	\
 	collections_dialog.o	\
