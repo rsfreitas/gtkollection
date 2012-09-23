@@ -2,8 +2,8 @@ Source: gtkollection
 Section: utils
 Priority: extra
 Maintainer: Rodrigo Freitas <rsfreitas.c@gmail.com>
-Build-Depends: debhelper (>= 7)
-Standards-Version: 3.8.3
+Build-Depends: debhelper (>= 7), libsqlite3-dev, libgtk2.0-dev
+Standards-Version: 3.9.2
 Homepage: http://rsfreitas.gihub.com/gtkollection
 
 Package: gtkollection

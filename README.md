@@ -47,3 +47,23 @@ To build gtkollection just do:
 * cd src
 * make
 * sudo make install
+
+Ubuntu installation
+-------------------
+
+gtkollection has a launchpad.net repository for ubuntu distributions. Currently
+it is supported on the following versions:
+
+* Oneiric Ocelot (oneiric)
+* Precise Pangolin (precise)
+* Quantal Quetzal (quantal)
+
+You can install gtkollection from its launchpad.net repository using the following
+steps. First add its PPA to your system by copying the line below to your system's
+software sources:
+
+    deb http://ppa.launchpad.net/rsfreitas/gtkollection/ubuntu (YOUR UBUNTU VERSION HERE) main
+
+Second add the PPA key signing key to your apt keyring:
+
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0FEF6417
